@@ -53,6 +53,8 @@ function App() {
   const [darkMode, setDarkMode] = React.useState(() => {
     return localStorage.getItem("darkMode") === "true" || window.matchMedia("(prefers-color-scheme: dark)").matches;
   });
+  const [language, setLanguage] = React.useState("en"); // ✅ เพิ่ม state ภาษาปลายทาง
+
   React.useEffect(() => {
     localStorage.setItem("darkMode", darkMode);
     document.documentElement.classList.toggle("dark", darkMode);
@@ -66,358 +68,114 @@ function App() {
       { className: "bg-blue-600 dark:bg-blue-800 p-4 shadow-md" },
       React.createElement(
         "div",
-        { className: "container mx-auto flex justify-between items-center" },
+        { className: "container mx-auto flex flex-col sm:flex-row justify-between items-center gap-3" },
         React.createElement(
           "h1",
           { className: "text-xl sm:text-2xl font-bold" },
-          "Figshare Explorer - Swiss Russameekiattsak(สวิส รัศมีเกียรติศักดิ์)"
+          "Figshare Explorer - Swiss Russameekiattsak (สวิส รัศมีเกียรติศักดิ์)"
         ),
         React.createElement(
-          "button",
-          {
-            onClick: () => setDarkMode(!darkMode),
-            className: "px-3 py-1 sm:px-4 sm:py-2 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm sm:text-base",
-            "aria-label": "Toggle dark/light mode"
-          },
-          darkMode ? "Light Mode" : "Dark Mode"
+          "div",
+          { className: "flex gap-2 items-center" },
+          React.createElement(
+            "select",
+            {
+              value: language,
+              onChange: (e) => setLanguage(e.target.value),
+              className: "px-2 py-1 text-sm rounded bg-white dark:bg-gray-700 dark:text-white"
+            },
+            React.createElement("option", { value: "en" }, "English"),
+            React.createElement("option", { value: "th" }, "ไทย"),
+            React.createElement("option", { value: "es" }, "Español"),
+            React.createElement("option", { value: "fr" }, "Français"),
+            React.createElement("option", { value: "de" }, "Deutsch"),
+            React.createElement("option", { value: "zh" }, "中文"),
+            React.createElement("option", { value: "ja" }, "日本語"),
+            React.createElement("option", { value: "ru" }, "Русский"),
+            React.createElement("option", { value: "ko" }, "한국어")
+          ),
+          React.createElement(
+            "button",
+            {
+              onClick: () => setDarkMode(!darkMode),
+              className: "px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm sm:text-base",
+              "aria-label": "Toggle dark/light mode"
+            },
+            darkMode ? "Light" : "Dark"
+          )
         )
       )
     ),
     React.createElement(
       "main",
       { className: "container mx-auto p-4" },
-      React.createElement(DatasetList, { initialData: initialData })
+      React.createElement(DatasetList, { initialData: initialData, language: language })
     )
   );
 }
 
-function DatasetList({ initialData }) {
+// ✅ เพิ่มฟังก์ชันแปล
+async function translateText(text, lang) {
+  if (lang === "en" || !text) return text; // ถ้าเป็นอังกฤษหรือว่าง ไม่ต้องแปล
+  try {
+    const res = await fetch(
+      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`
+    );
+    const data = await res.json();
+    return data.responseData.translatedText || text;
+  } catch {
+    return text; // ถ้า error ก็ใช้ต้นฉบับ
+  }
+}
+
+function DatasetList({ initialData, language }) {
   const [data, setData] = React.useState(initialData);
-  const [filtered, setFiltered] = React.useState(initialData);
-  const [search, setSearch] = React.useState("");
-  const [dateFilter, setDateFilter] = React.useState("");
-  const [bookmarks, setBookmarks] = React.useState(
-    JSON.parse(localStorage.getItem("bookmarks") || "[]")
-  );
+  const [translatedData, setTranslatedData] = React.useState(initialData);
   const [loading, setLoading] = React.useState(false);
-  const [error, setError] = React.useState(null);
-  const [currentPage, setCurrentPage] = React.useState(1);
-  const itemsPerPage = 3;
 
-  const loadData = () => {
-    setLoading(true);
-    setError(null);
-    setTimeout(() => {
-      setData(initialData);
-      setFiltered(initialData);
-      setCurrentPage(1);
-      setLoading(false);
-    }, 500);
-  };
-
+  // ✅ เมื่อเปลี่ยนภาษา — แปลทุก title และ description
   React.useEffect(() => {
-    let filteredData = data;
-    if (search) {
-      filteredData = filteredData.filter((d) =>
-        d.title.toLowerCase().includes(search.toLowerCase())
+    if (language === "en") {
+      setTranslatedData(initialData);
+      return;
+    }
+    async function translateAll() {
+      setLoading(true);
+      const translated = await Promise.all(
+        initialData.map(async (item) => ({
+          ...item,
+          title: await translateText(item.title, language),
+          description: await translateText(item.description, language),
+        }))
       );
+      setTranslatedData(translated);
+      setLoading(false);
     }
-    if (dateFilter) {
-      filteredData = filteredData.filter(
-        (d) => d.posted_date === dateFilter
-      );
-    }
-    setFiltered(filteredData);
-    setCurrentPage(1);
-  }, [search, dateFilter, data]);
-
-  const addBookmark = (item) => {
-    if (!bookmarks.some((b) => b.id === item.id)) {
-      const newBookmarks = [...bookmarks, item];
-      setBookmarks(newBookmarks);
-      localStorage.setItem("bookmarks", JSON.stringify(newBookmarks));
-    }
-  };
-
-  const removeBookmark = (id) => {
-    const newBookmarks = bookmarks.filter((b) => b.id !== id);
-    setBookmarks(newBookmarks);
-    localStorage.setItem("bookmarks", JSON.stringify(newBookmarks));
-  };
-
-  const isBookmarked = (id) => bookmarks.some((b) => b.id === id);
-
-  const handleLinkClick = (url, title) => {
-    console.log(`คลิกลิงก์: ${url} สำหรับ ${title}`);
-    if (url && url !== "#") {
-      window.open(url, "_blank", "noopener,noreferrer");
-    } else {
-      console.log(`ลิงก์ไม่ถูกต้องสำหรับ ${title}`);
-    }
-  };
-
-  const indexOfLastItem = currentPage * itemsPerPage;
-  const indexOfFirstItem = indexOfLastItem - itemsPerPage;
-  const currentItems = filtered.slice(indexOfFirstItem, indexOfLastItem);
-  const totalPages = Math.ceil(filtered.length / itemsPerPage);
+    translateAll();
+  }, [language]);
 
   return React.createElement(
     "div",
-    { className: "space-y-6" },
+    null,
+    loading && React.createElement("p", { className: "text-blue-500 mb-2" }, "Translating..."),
     React.createElement(
-      "div",
-      { className: "flex flex-col sm:flex-row gap-2 sm:gap-4" },
-      React.createElement(
-        "button",
-        {
-          onClick: loadData,
-          disabled: loading,
-          className: "px-3 py-1 sm:px-4 sm:py-2 bg-blue-500 text-white rounded hover:bg-blue-600 disabled:opacity-50 text-sm sm:text-base"
-        },
-        loading ? "กำลังโหลด..." : "รีเฟรชข้อมูล"
-      ),
-      React.createElement(
-        "input",
-        {
-          type: "text",
-          placeholder: "ค้นหาด้วยชื่อ (เช่น Riemann, Gravitational)",
-          className: "px-3 py-1 sm:px-4 sm:py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600 flex-1 text-sm sm:text-base",
-          value: search,
-          onChange: (e) => setSearch(e.target.value),
-          "aria-label": "Search datasets by name"
-        }
-      ),
-      React.createElement(
-        "input",
-        {
-          type: "date",
-          className: "px-3 py-1 sm:px-4 sm:py-2 border rounded dark:bg-gray-700 dark:text-white dark:border-gray-600 text-sm sm:text-base",
-          value: dateFilter,
-          onChange: (e) => setDateFilter(e.target.value),
-          "aria-label": "Filter by posted date"
-        }
-      )
-    ),
-    error && React.createElement(
-      "div",
-      { className: "p-4 bg-red-100 dark:bg-red-900 text-red-700 dark:text-red-200 rounded" },
-      error,
-      React.createElement(
-        "button",
-        {
-          onClick: loadData,
-          className: "ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600"
-        },
-        "ลองใหม่"
-      )
-    ),
-    loading && React.createElement(
-      "div",
-      { className: "flex justify-center items-center" },
-      React.createElement(
-        "svg",
-        {
-          className: "animate-spin h-6 w-6 sm:h-8 sm:w-8 text-blue-500",
-          xmlns: "http://www.w3.org/2000/svg",
-          fill: "none",
-          viewBox: "0 0 24 24"
-        },
-        React.createElement("circle", {
-          className: "opacity-25",
-          cx: "12",
-          cy: "12",
-          r: "10",
-          stroke: "currentColor",
-          strokeWidth: "4"
-        }),
-        React.createElement("path", {
-          className: "opacity-75",
-          fill: "currentColor",
-          d: "M4 12a8 8 0 018-8v8h8a8 8 0 11-16 0z"
-        })
-      ),
-      React.createElement("span", { className: "ml-2 text-sm sm:text-base" }, "กำลังโหลดข้อมูล...")
-    ),
-    React.createElement(
-      "section",
-      null,
-      React.createElement(
-        "h2",
-        { className: "text-lg sm:text-xl font-semibold mb-2" },
-        "บุ๊กมาร์ก"
-      ),
-      bookmarks.length === 0 ? (
+      "ul",
+      { className: "space-y-4" },
+      translatedData.map((d) =>
         React.createElement(
-          "p",
-          { className: "text-gray-500 dark:text-gray-400 text-sm sm:text-base" },
-          "ยังไม่มีบุ๊กมาร์ก เพิ่มจากผลงานด้านล่าง!"
-        )
-      ) : (
-        React.createElement(
-          "ul",
-          { className: "space-y-2" },
-          bookmarks.map((b) =>
-            React.createElement(
-              "li",
-              {
-                key: b.id,
-                className: "p-2 bg-gray-200 dark:bg-gray-700 rounded flex justify-between items-center"
-              },
-              b.public_url && b.public_url !== "#" ? (
-                React.createElement(
-                  "a",
-                  {
-                    href: b.public_url,
-                    onClick: () => handleLinkClick(b.public_url, b.title),
-                    className: "hover:underline text-sm sm:text-base truncate flex-1"
-                  },
-                  b.title
-                )
-              ) : (
-                React.createElement(
-                  "span",
-                  { className: "text-gray-500 text-sm sm:text-base truncate flex-1" },
-                  b.title + " (ผลงานไม่พร้อมใช้งาน)"
-                )
-              ),
-              React.createElement(
-                "button",
-                {
-                  onClick: () => removeBookmark(b.id),
-                  className: "px-2 py-1 bg-red-500 text-white rounded hover:bg-red-600 text-xs sm:text-sm",
-                  "aria-label": "Remove bookmark"
-                },
-                "ลบ"
-              )
-            )
-          )
-        )
-      )
-    ),
-    React.createElement(
-      "section",
-      null,
-      React.createElement(
-        "h2",
-        { className: "text-lg sm:text-xl font-semibold mb-2" },
-        "ผลงานของ Swiss Russameekiattsak (6 รายการ)"
-      ),
-      currentItems.length === 0 && !loading ? (
-        React.createElement(
-          "p",
-          { className: "text-gray-500 dark:text-gray-400 text-sm sm:text-base" },
-          "ไม่พบผลงานที่ตรงกับตัวกรอง ลองปรับการค้นหาหรือวันที่"
-        )
-      ) : (
-        React.createElement(
-          React.Fragment,
-          null,
+          "li",
+          { key: d.id, className: "p-3 bg-white dark:bg-gray-800 rounded shadow" },
           React.createElement(
-            "div",
-            { className: "grid gap-4 sm:grid-cols-2 lg:grid-cols-3" },
-            currentItems.map((d) =>
-              React.createElement(
-                "div",
-                {
-                  key: d.id,
-                  className: "p-3 sm:p-4 bg-white dark:bg-gray-800 rounded shadow hover:shadow-lg transition"
-                },
-                React.createElement(
-                  "div",
-                  null,
-                  d.public_url && d.public_url !== "#" ? (
-                    React.createElement(
-                      "a",
-                      {
-                        href: d.public_url,
-                        onClick: () => handleLinkClick(d.public_url, d.title),
-                        className: "text-base sm:text-lg font-semibold hover:underline block mb-1"
-                      },
-                      d.title
-                    )
-                  ) : (
-                    React.createElement(
-                      "span",
-                      { className: "text-base sm:text-lg font-semibold block mb-1" },
-                      d.title + " (ผลงานไม่พร้อมใช้งาน)"
-                    )
-                  ),
-                  React.createElement(
-                    "p",
-                    { className: "text-xs sm:text-sm text-gray-600 dark:text-gray-400 mb-1" },
-                    `ประเภท: ${d.type} | เผยแพร่: ${new Date(d.posted_date).toLocaleDateString("th-TH")}`
-                  ),
-                  React.createElement(
-                    "p",
-                    { className: "text-xs sm:text-sm text-gray-700 dark:text-gray-300" },
-                    d.description
-                  )
-                ),
-                React.createElement(
-                  "div",
-                  { className: "mt-3 sm:mt-4 flex gap-2 flex-wrap" },
-                  d.public_url && d.public_url !== "#" ? (
-                    React.createElement(
-                      "a",
-                      {
-                        href: d.public_url,
-                        onClick: () => handleLinkClick(d.public_url, d.title),
-                        className: "px-2 py-1 sm:px-3 sm:py-1 bg-blue-500 text-white rounded hover:bg-blue-600 text-xs sm:text-sm"
-                      },
-                      "ดูรายละเอียด"
-                    )
-                  ) : (
-                    React.createElement(
-                      "span",
-                      { className: "px-2 py-1 sm:px-3 sm:py-1 bg-gray-400 text-white rounded text-xs sm:text-sm cursor-not-allowed" },
-                      "ไม่มีลิงก์"
-                    )
-                  ),
-                  React.createElement(
-                    "button",
-                    {
-                      onClick: () => addBookmark(d),
-                      disabled: isBookmarked(d.id),
-                      className: `px-2 py-1 sm:px-3 sm:py-1 rounded text-xs sm:text-sm whitespace-nowrap ${
-                        isBookmarked(d.id)
-                          ? "bg-gray-400 text-white cursor-not-allowed"
-                          : "bg-yellow-500 text-white hover:bg-yellow-600"
-                      }`,
-                      "aria-label": isBookmarked(d.id) ? "Already bookmarked" : "Add to bookmarks"
-                    },
-                    isBookmarked(d.id) ? "บุ๊กมาร์กแล้ว" : "บุ๊กมาร์ก"
-                  )
-                )
-              )
-            )
+            "a",
+            {
+              href: d.public_url,
+              target: "_blank",
+              rel: "noopener noreferrer",
+              className: "text-blue-600 dark:text-blue-400 hover:underline text-base sm:text-lg font-semibold"
+            },
+            d.title
           ),
-          totalPages > 1 && React.createElement(
-            "div",
-            { className: "flex justify-between items-center mt-4" },
-            React.createElement(
-              "button",
-              {
-                onClick: () => setCurrentPage((prev) => Math.max(prev - 1, 1)),
-                disabled: currentPage === 1,
-                className: "px-2 py-1 sm:px-3 sm:py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50 text-xs sm:text-sm"
-              },
-              "ก่อนหน้า"
-            ),
-            React.createElement(
-              "span",
-              { className: "text-xs sm:text-sm" },
-              `หน้า ${currentPage} จาก ${totalPages}`
-            ),
-            React.createElement(
-              "button",
-              {
-                onClick: () => setCurrentPage((prev) => Math.min(prev + 1, totalPages)),
-                disabled: currentPage === totalPages,
-                className: "px-2 py-1 sm:px-3 sm:py-1 bg-gray-300 dark:bg-gray-600 rounded disabled:opacity-50 text-xs sm:text-sm"
-              },
-              "ถัดไป"
-            )
-          )
+          React.createElement("p", { className: "text-xs sm:text-sm mt-1" }, d.description)
         )
       )
     )
