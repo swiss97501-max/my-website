@@ -72,7 +72,7 @@ function App() {
         React.createElement(
           "h1",
           { className: "text-xl sm:text-2xl font-bold" },
-          "Figshare Explorer - Swiss Russameekiattsak (สวิส รัศมีเกียรติศักดิ์)"
+          "Figshare Explorer - Swiss Russameekiattisak (สวิส รัศมีเกียรติศักดิ์)"
         ),
         React.createElement(
           "div",
