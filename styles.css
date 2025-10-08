@@ -58,6 +58,11 @@ header {
   padding: 1rem;
   box-shadow: 0 3px 10px rgba(0, 0, 0, 0.2);
 }
+header h1 {
+  font-size: 1.6rem;
+  font-weight: 700;
+  margin: 0;
+}
 .dark header {
   background: linear-gradient(90deg, #1e40af, #1e3a8a);
 }
@@ -115,11 +120,6 @@ select {
 }
 
 /* ==================== TYPOGRAPHY ==================== */
-h1 {
-  font-size: 1.6rem;
-  font-weight: 700;
-  margin: 0;
-}
 p {
   line-height: 1.6;
   font-size: 0.95rem;
