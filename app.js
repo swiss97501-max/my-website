@@ -49,91 +49,92 @@ const initialData = [
   }
 ];
 
+// ✅ ใช้ LibreTranslate (โอเพนซอร์ส แปลได้ตลอด)
+async function translateText(text, lang) {
+  if (!text || lang === "en") return text;
+  try {
+    const res = await fetch("https://libretranslate.de/translate", {
+      method: "POST",
+      body: JSON.stringify({
+        q: text,
+        source: "en",
+        target: lang,
+        format: "text"
+      }),
+      headers: { "Content-Type": "application/json" }
+    });
+    const data = await res.json();
+    return data.translatedText || text;
+  } catch (err) {
+    console.error("Translation error:", err);
+    return text;
+  }
+}
+
 function App() {
-  const [darkMode, setDarkMode] = React.useState(() => {
-    return localStorage.getItem("darkMode") === "true" || window.matchMedia("(prefers-color-scheme: dark)").matches;
-  });
-  const [language, setLanguage] = React.useState("en"); // ✅ เพิ่ม state ภาษาปลายทาง
+  const [darkMode, setDarkMode] = React.useState(
+    localStorage.getItem("darkMode") === "true" ||
+      window.matchMedia("(prefers-color-scheme: dark)").matches
+  );
+  const [language, setLanguage] = React.useState("en");
 
   React.useEffect(() => {
     localStorage.setItem("darkMode", darkMode);
     document.documentElement.classList.toggle("dark", darkMode);
   }, [darkMode]);
 
-  return React.createElement(
-    "div",
-    { className: `min-h-screen ${darkMode ? "dark bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}` },
-    React.createElement(
-      "header",
-      { className: "bg-blue-600 dark:bg-blue-800 p-4 shadow-md" },
-      React.createElement(
-        "div",
-        { className: "container mx-auto flex flex-col sm:flex-row justify-between items-center gap-3" },
-        React.createElement(
-          "h1",
-          { className: "text-xl sm:text-2xl font-bold" },
-          "Figshare Explorer - Swiss Russameekiattisak (สวิส รัศมีเกียรติศักดิ์)"
-        ),
-        React.createElement(
-          "div",
-          { className: "flex gap-2 items-center" },
-          React.createElement(
-            "select",
-            {
-              value: language,
-              onChange: (e) => setLanguage(e.target.value),
-              className: "px-2 py-1 text-sm rounded bg-white dark:bg-gray-700 dark:text-white"
-            },
-            React.createElement("option", { value: "en" }, "English"),
-            React.createElement("option", { value: "th" }, "ไทย"),
-            React.createElement("option", { value: "es" }, "Español"),
-            React.createElement("option", { value: "fr" }, "Français"),
-            React.createElement("option", { value: "de" }, "Deutsch"),
-            React.createElement("option", { value: "zh" }, "中文"),
-            React.createElement("option", { value: "ja" }, "日本語"),
-            React.createElement("option", { value: "ru" }, "Русский"),
-            React.createElement("option", { value: "ko" }, "한국어")
-          ),
-          React.createElement(
-            "button",
-            {
-              onClick: () => setDarkMode(!darkMode),
-              className: "px-3 py-1 bg-gray-500 text-white rounded hover:bg-gray-600 transition text-sm sm:text-base",
-              "aria-label": "Toggle dark/light mode"
-            },
-            darkMode ? "Light" : "Dark"
-          )
-        )
-      )
-    ),
-    React.createElement(
-      "main",
-      { className: "container mx-auto p-4" },
-      React.createElement(DatasetList, { initialData: initialData, language: language })
-    )
+  return (
+    <div
+      className={`min-h-screen transition-colors duration-300 ${
+        darkMode ? "dark bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
+      }`}
+    >
+      <header className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-800 dark:to-indigo-900 p-4 shadow-lg">
+        <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">
+            Figshare Explorer – Swiss Russameekiattisak
+          </h1>
+          <div className="flex gap-2 items-center">
+            <select
+              value={language}
+              onChange={(e) => setLanguage(e.target.value)}
+              className="px-2 py-1 text-sm rounded bg-white dark:bg-gray-800 dark:text-white border border-gray-300 dark:border-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-400"
+            >
+              <option value="en">English</option>
+              <option value="th">ไทย</option>
+              <option value="es">Español</option>
+              <option value="fr">Français</option>
+              <option value="de">Deutsch</option>
+              <option value="zh">中文</option>
+              <option value="ja">日本語</option>
+              <option value="ru">Русский</option>
+              <option value="ko">한국어</option>
+            </select>
+            <button
+              onClick={() => setDarkMode(!darkMode)}
+              className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 transition text-sm sm:text-base shadow-md"
+            >
+              {darkMode ? "Light" : "Dark"}
+            </button>
+          </div>
+        </div>
+      </header>
+
+      <main className="container mx-auto p-4">
+        <DatasetList initialData={initialData} language={language} />
+      </main>
+
+      <footer className="text-center py-4 text-sm text-gray-500 dark:text-gray-400 border-t border-gray-300 dark:border-gray-700 mt-8">
+        © 2025 Swiss Russameekiattisak — Figshare Academic Viewer
+      </footer>
+    </div>
   );
 }
 
-// ✅ เพิ่มฟังก์ชันแปล
-async function translateText(text, lang) {
-  if (lang === "en" || !text) return text; // ถ้าเป็นอังกฤษหรือว่าง ไม่ต้องแปล
-  try {
-    const res = await fetch(
-      `https://api.mymemory.translated.net/get?q=${encodeURIComponent(text)}&langpair=en|${lang}`
-    );
-    const data = await res.json();
-    return data.responseData.translatedText || text;
-  } catch {
-    return text; // ถ้า error ก็ใช้ต้นฉบับ
-  }
-}
-
 function DatasetList({ initialData, language }) {
-  const [data, setData] = React.useState(initialData);
   const [translatedData, setTranslatedData] = React.useState(initialData);
   const [loading, setLoading] = React.useState(false);
 
-  // ✅ เมื่อเปลี่ยนภาษา — แปลทุก title และ description
   React.useEffect(() => {
     if (language === "en") {
       setTranslatedData(initialData);
@@ -145,7 +146,7 @@ function DatasetList({ initialData, language }) {
         initialData.map(async (item) => ({
           ...item,
           title: await translateText(item.title, language),
-          description: await translateText(item.description, language),
+          description: await translateText(item.description, language)
         }))
       );
       setTranslatedData(translated);
@@ -154,32 +155,32 @@ function DatasetList({ initialData, language }) {
     translateAll();
   }, [language]);
 
-  return React.createElement(
-    "div",
-    null,
-    loading && React.createElement("p", { className: "text-blue-500 mb-2" }, "Translating..."),
-    React.createElement(
-      "ul",
-      { className: "space-y-4" },
-      translatedData.map((d) =>
-        React.createElement(
-          "li",
-          { key: d.id, className: "p-3 bg-white dark:bg-gray-800 rounded shadow" },
-          React.createElement(
-            "a",
-            {
-              href: d.public_url,
-              target: "_blank",
-              rel: "noopener noreferrer",
-              className: "text-blue-600 dark:text-blue-400 hover:underline text-base sm:text-lg font-semibold"
-            },
-            d.title
-          ),
-          React.createElement("p", { className: "text-xs sm:text-sm mt-1" }, d.description)
-        )
-      )
-    )
+  return (
+    <div>
+      {loading && <p className="text-blue-500 mb-2 animate-pulse">Translating...</p>}
+      <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+        {translatedData.map((d) => (
+          <li
+            key={d.id}
+            className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1"
+          >
+            <a
+              href={d.public_url}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-blue-600 dark:text-blue-400 hover:underline font-semibold block mb-2"
+            >
+              {d.title}
+            </a>
+            <p className="text-sm opacity-90">{d.description}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 mt-2">
+              📄 {d.type} • {d.posted_date}
+            </p>
+          </li>
+        ))}
+      </ul>
+    </div>
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")).render(React.createElement(App));
+ReactDOM.createRoot(document.getElementById("root")).render(<App />);
