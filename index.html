@@ -1,58 +1,102 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Figshare Explorer - Swiss Russameekiattisak (สวิส รัศมีเกียนติศักดิ์)</title>
-  <link rel="stylesheet" href="styles.css" />
-  <!-- React & ReactDOM -->
-  <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
-  <!-- XLSX (ถ้าคุณยังต้องโหลดไฟล์ Excel) -->
-  <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
-</head>
-<body>
-  <div id="root"></div>
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Figshare Explorer – Swiss Russameekiattisak (สวิส รัศมีเกียรติศักดิ์)</title>
 
-  <!-- ใส่ app.js ของเวอร์ชันแปลภาษา 8 ภาษาแทนที่นี่ -->
-  <script src="app.js"></script>
+    <!-- 🩵 Google Font: Inter -->
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
 
-  <!-- ถ้าต้องการฟังก์ชันโหลด XLSX แยกไว้ -->
-  <script type="text/javascript">
-    var gk_isXlsx = false;
-    var gk_xlsxFileLookup = {};
-    var gk_fileData = {};
-    function filledCell(cell) {
-      return cell !== '' && cell != null;
-    }
-    function loadFileData(filename) {
-      if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
-        try {
-          var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
-          var firstSheetName = workbook.SheetNames[0];
-          var worksheet = workbook.Sheets[firstSheetName];
+    <!-- 🌈 Tailwind CSS (CDN build) -->
+    <script src="https://cdn.tailwindcss.com"></script>
 
-          // Convert sheet to JSON to filter blank rows
-          var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
-          // Filter out blank rows
-          var filteredData = jsonData.filter(row => row.some(filledCell));
-
-          // Heuristic to find the header row
-          var headerRowIndex = filteredData.findIndex((row, index) =>
-            row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
-          );
-          if (headerRowIndex === -1 || headerRowIndex > 25) headerRowIndex = 0;
-
-          var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
-          csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
-          return csv;
-        } catch (e) {
-          console.error(e);
-          return "";
-        }
+    <style>
+      /* ใช้ฟอนต์ Inter ทั่วเว็บ */
+      body {
+        font-family: "Inter", system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+        transition: background 0.3s ease, color 0.3s ease;
       }
-      return gk_fileData[filename] || "";
-    }
-  </script>
-</body>
+
+      /* เอฟเฟกต์พื้นหลังแบบ gradient */
+      html,
+      body {
+        min-height: 100%;
+        background: linear-gradient(180deg, #f3f4f6 0%, #ffffff 100%);
+      }
+
+      /* Dark mode */
+      .dark {
+        background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
+        color: #e2e8f0;
+      }
+
+      /* ปุ่ม hover สวยขึ้น */
+      button:hover {
+        transform: scale(1.03);
+        transition: 0.2s ease-in-out;
+      }
+    </style>
+
+    <!-- React & ReactDOM -->
+    <script src="https://cdn.jsdelivr.net/npm/react@18.2.0/umd/react.production.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/react-dom@18.2.0/umd/react-dom.production.min.js"></script>
+
+    <!-- XLSX (สำหรับโหลดไฟล์ Excel ถ้ามี) -->
+    <script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+  </head>
+
+  <body class="bg-gray-100 dark:bg-gray-900 text-gray-900 dark:text-gray-100">
+    <div id="root" class="min-h-screen"></div>
+
+    <!-- ✅ ใส่ app.js ที่ใช้ LibreTranslate -->
+    <script src="app.js"></script>
+
+    <!-- ⚙️ ฟังก์ชันจัดการไฟล์ XLSX (เดิม) -->
+    <script type="text/javascript">
+      var gk_isXlsx = false;
+      var gk_xlsxFileLookup = {};
+      var gk_fileData = {};
+
+      function filledCell(cell) {
+        return cell !== "" && cell != null;
+      }
+
+      function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+          try {
+            var workbook = XLSX.read(gk_fileData[filename], { type: "base64" });
+            var firstSheetName = workbook.SheetNames[0];
+            var worksheet = workbook.Sheets[firstSheetName];
+
+            var jsonData = XLSX.utils.sheet_to_json(worksheet, {
+              header: 1,
+              blankrows: false,
+              defval: "",
+            });
+
+            var filteredData = jsonData.filter((row) => row.some(filledCell));
+
+            var headerRowIndex = filteredData.findIndex(
+              (row, index) =>
+                row.filter(filledCell).length >=
+                filteredData[index + 1]?.filter(filledCell).length
+            );
+            if (headerRowIndex === -1 || headerRowIndex > 25) headerRowIndex = 0;
+
+            var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex));
+            csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+            return csv;
+          } catch (e) {
+            console.error(e);
+            return "";
+          }
+        }
+        return gk_fileData[filename] || "";
+      }
+    </script>
+  </body>
 </html>
