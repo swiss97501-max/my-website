@@ -14,23 +14,6 @@ body {
   transition: background 0.3s ease, color 0.3s ease;
 }
 
-/* ==================== DARK MODE ==================== */
-.dark {
-  background: linear-gradient(180deg, #0f172a 0%, #1e293b 100%);
-  color: #e2e8f0;
-}
-.dark a {
-  color: #93c5fd;
-}
-.dark a:hover {
-  color: #bfdbfe;
-}
-.dark .card {
-  background-color: #1e293b;
-  color: #e2e8f0;
-  border-color: #334155;
-}
-
 /* ==================== LINKS ==================== */
 a {
   color: #2563eb;
@@ -63,9 +46,6 @@ header h1 {
   font-weight: 700;
   margin: 0;
 }
-.dark header {
-  background: linear-gradient(90deg, #1e40af, #1e3a8a);
-}
 
 /* ==================== CARD ==================== */
 .card {
@@ -97,36 +77,12 @@ button:hover {
   background-color: #374151;
   transform: scale(1.04);
 }
-.dark button {
-  background-color: #475569;
-}
-.dark button:hover {
-  background-color: #64748b;
-}
-
-/* ==================== SELECT ==================== */
-select {
-  border-radius: 6px;
-  border: 1px solid #d1d5db;
-  background-color: #fff;
-  padding: 0.3rem 0.5rem;
-  font-size: 0.9rem;
-  color: #111827;
-}
-.dark select {
-  background-color: #374151;
-  border-color: #4b5563;
-  color: #f9fafb;
-}
 
 /* ==================== TYPOGRAPHY ==================== */
 p {
   line-height: 1.6;
   font-size: 0.95rem;
   color: #475569;
-}
-.dark p {
-  color: #cbd5e1;
 }
 
 /* ==================== UTILITIES ==================== */
@@ -149,41 +105,6 @@ p {
   margin-bottom: 0.5rem;
 }
 
-/* ==================== GRADIENT ANIMATION ==================== */
-@keyframes gradient-move {
-  0% {
-    background-position: 0% 50%;
-  }
-  50% {
-    background-position: 100% 50%;
-  }
-  100% {
-    background-position: 0% 50%;
-  }
-}
-
-.bg-animated {
-  background: linear-gradient(270deg, #3b82f6, #6366f1, #06b6d4);
-  background-size: 600% 600%;
-  animation: gradient-move 8s ease infinite;
-}
-
-/* ==================== LOADING ==================== */
-.loader {
-  border: 3px solid #f3f3f3;
-  border-top: 3px solid #2563eb;
-  border-radius: 50%;
-  width: 22px;
-  height: 22px;
-  animation: spin 1s linear infinite;
-  margin: auto;
-}
-@keyframes spin {
-  to {
-    transform: rotate(360deg);
-  }
-}
-
 /* ==================== FOOTER ==================== */
 footer {
   margin-top: 3rem;
@@ -192,9 +113,5 @@ footer {
   color: #9ca3af;
   padding: 1rem;
   border-top: 1px solid #e5e7eb;
-}
-.dark footer {
-  border-top-color: #334155;
-  color: #94a3b8;
 }
 </style>
