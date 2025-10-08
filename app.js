@@ -1,7 +1,7 @@
 const initialData = [
   {
     id: 1,
-    title: "Gravitational Acceleration Formula (Full Form) In2025",
+    title: "Gravitational Acceleration Formula (Full Form) In 2025",
     type: "Presentation",
     posted_date: "2025-10-04",
     description: "Presentation on gravitational acceleration formulas in 2025.",
@@ -17,7 +17,7 @@ const initialData = [
   },
   {
     id: 3,
-    title: "Root-Power Arithmetic ⊛Universe",
+    title: "Root-Power Arithmetic ⊛ Universe",
     type: "Thesis",
     posted_date: "2025-08-27",
     description: "Thesis exploring root-power arithmetic in a universal context.",
@@ -33,7 +33,7 @@ const initialData = [
   },
   {
     id: 5,
-    title: "TWISTING EQUATIONS FROM DISCRETE SUMS TO CONTINUOUS TRUTHS",
+    title: "Twisting Equations From Discrete Sums to Continuous Truths",
     type: "Thesis",
     posted_date: "2025-08-16",
     description: "Thesis on transforming discrete sums into continuous equations.",
@@ -41,7 +41,7 @@ const initialData = [
   },
   {
     id: 6,
-    title: "DELTA-REGULARIZED ZETA FUNCTION AND THE RIEMANN HYPOTHESIS",
+    title: "Delta-Regularized Zeta Function and the Riemann Hypothesis",
     type: "Thesis",
     posted_date: "2025-08-05",
     description: "Thesis on delta-regularized zeta function and its relation to the Riemann Hypothesis.",
@@ -49,7 +49,7 @@ const initialData = [
   }
 ];
 
-// ✅ ใช้ LibreTranslate (โอเพนซอร์ส แปลได้ตลอด)
+// ✅ ใช้ LibreTranslate (API ฟรี)
 async function translateText(text, lang) {
   if (!text || lang === "en") return text;
   try {
@@ -74,7 +74,7 @@ async function translateText(text, lang) {
 function App() {
   const [darkMode, setDarkMode] = React.useState(
     localStorage.getItem("darkMode") === "true" ||
-      window.matchMedia("(prefers-color-scheme: dark)").matches
+    window.matchMedia("(prefers-color-scheme: dark)").matches
   );
   const [language, setLanguage] = React.useState("en");
 
@@ -86,10 +86,10 @@ function App() {
   return (
     <div
       className={`min-h-screen transition-colors duration-300 ${
-        darkMode ? "dark bg-gray-900 text-white" : "bg-gray-50 text-gray-900"
+        darkMode ? "dark bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
       }`}
     >
-      <header className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-800 dark:to-indigo-900 p-4 shadow-lg">
+      <header className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-800 dark:to-indigo-900 p-4 shadow-md">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
           <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">
             Figshare Explorer – Swiss Russameekiattisak
@@ -112,7 +112,7 @@ function App() {
             </select>
             <button
               onClick={() => setDarkMode(!darkMode)}
-              className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 transition text-sm sm:text-base shadow-md"
+              className="px-3 py-1 bg-gray-700 text-white rounded hover:bg-gray-600 transition text-sm sm:text-base shadow"
             >
               {darkMode ? "Light" : "Dark"}
             </button>
@@ -157,12 +157,16 @@ function DatasetList({ initialData, language }) {
 
   return (
     <div>
-      {loading && <p className="text-blue-500 mb-2 animate-pulse">Translating...</p>}
+      {loading && (
+        <p className="text-blue-500 mb-2 animate-pulse">
+          Translating content...
+        </p>
+      )}
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {translatedData.map((d) => (
           <li
             key={d.id}
-            className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow-lg hover:shadow-2xl transition transform hover:-translate-y-1"
+            className="p-4 bg-white dark:bg-gray-800 rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1"
           >
             <a
               href={d.public_url}
