@@ -51,12 +51,12 @@ const initialData = [
 
 // ลิงก์ PDF ใหม่
 const pdfLinks = [
-  "https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/58491598/.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20251008/eu-west-1/s3/aws4_request&X-Amz-Date=20251008T051813Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=5a6a50b22cdf4698b3e56d184840114e561a3630c12ba86dc6a6a08f44af1ace",
-  "https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/57525826/ComparingBinocularVisionandWaveInterference.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20251008/eu-west-1/s3/aws4_request&X-Amz-Date=20251008T051831Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=0faf0786b38683808c1ad4635ff5a4b5fe0d25095de85bda397bc13eed8038e7",
-  "https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/57448372/RootPowerArithmeticUniverse.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20251008/eu-west-1/s3/aws4_request&X-Amz-Date=20251008T051846Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=7ab65784b00f5f8da217d1206f322fb3df903334715bb7f9f165e45cea0389a1",
-  "https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/57358165/ASwissConditionalFrameworkforLegendresConjecture.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20251008/eu-west-1/s3/aws4_request&X-Amz-Date=20251008T051858Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=ba6589604d1f9d6637b3d180a5aa12d6b1bc5698742b4b4a5be8e5827b25ff3c",
-  "https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/57228923/TWISTINGEQUATIONSFROMDISCRETESUMSTOCONTINUOUSTRUTHS.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20251008/eu-west-1/s3/aws4_request&X-Amz-Date=20251008T051912Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=eec565728fbc6e37e03e4c12da080bf956a2d26e53d692162209efb19b1dd54e",
-  "https://s3-eu-west-1.amazonaws.com/pfigshare-u-files/56919101/SwissRh_DeltaZeta_RH_2025.pdf.pdf?X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Credential=AKIAIYCQYOYV5JSSROOA/20251008/eu-west-1/s3/aws4_request&X-Amz-Date=20251008T051923Z&X-Amz-Expires=10&X-Amz-SignedHeaders=host&X-Amz-Signature=4e008a69c5f737b7c21a0464ee898494232abbbc3132e05859b8f18aedb85a51"
+  "https://drive.google.com/file/d/1FzwO6z56mpJH_zzT7tOT_jIAFMc7y0qw/view?usp=drivesdk",
+  "https://drive.google.com/file/d/1_d3gXOHXRMe-v2i1igExkARMyLhO9ji4/view?usp=drivesdk",
+  "https://drive.google.com/file/d/1fUiFWi10wJgIwjCqT0eSq6oVruIivnyS/view?usp=drivesdk",
+  "https://drive.google.com/file/d/1KP5noNyxybRD3otmhZvNBgYJ-OAOOwfG/view?usp=drivesdk",
+  "https://drive.google.com/file/d/1el29NzaaAESovQJFI4csDVvbsF-Lvvyj/view?usp=drivesdk",
+  "https://drive.google.com/file/d/1uHWSfG6K3nP5-jhLP4Q6xWEeEwDLCOd8/view?usp=drivesdk"
 ];
 
 function App() {
