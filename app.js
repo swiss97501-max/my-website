@@ -84,15 +84,11 @@ function App() {
   }, [darkMode]);
 
   return (
-    <div
-      className={`min-h-screen transition-colors duration-300 ${
-        darkMode ? "dark bg-gray-900 text-white" : "bg-gray-100 text-gray-900"
-      }`}
-    >
+    <div className={`min-h-screen transition-colors duration-300 ${darkMode ? "dark bg-gray-900 text-white" : "bg-gray-100 text-gray-900"}`}>
       <header className="bg-gradient-to-r from-blue-600 to-indigo-600 dark:from-blue-800 dark:to-indigo-900 p-4 shadow-md">
         <div className="container mx-auto flex flex-col sm:flex-row justify-between items-center gap-3">
           <h1 className="text-xl sm:text-2xl font-bold tracking-wide text-white">
-            Figshare Explorer – Swiss Russameekiattisak
+            Figshare Explorer – Swiss Russameekiattisak{สวิส รัศมีเกียรติศักดิ์}
           </h1>
           <div className="flex gap-2 items-center">
             <select
@@ -158,9 +154,7 @@ function DatasetList({ initialData, language }) {
   return (
     <div>
       {loading && (
-        <p className="text-blue-500 mb-2 animate-pulse">
-          Translating content...
-        </p>
+        <p className="text-blue-500 mb-2 animate-pulse">Translating content...</p>
       )}
       <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
         {translatedData.map((d) => (
