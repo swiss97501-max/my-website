@@ -46,6 +46,14 @@ const initialData = [
     posted_date: "2025-08-05",
     description: "Thesis on delta-regularized zeta function and its relation to the Riemann Hypothesis.",
     public_url: "https://figshare.com/articles/thesis/SwissRh_DeltaZeta_RH_2025_pdf_pdf/29829023"
+      },
+  {
+    id: 7,
+    title: "Twisting the P-Series with Logarithmic FunctionAn Indicator for Quantum System Deviation",
+    type: "Thesis",
+    posted_date: "2025-10-24",
+    description: "Thesis on Twisting the P-Series with Logarithmic FunctionAn Indicator for Quantum System Deviation.",
+    public_url: "https://figshare.com/articles/thesis/UntitledTwisting_the_P-Series_with_Logarithmic_FunctionAn_Indicator_for_Quantum_System_Deviation_Item/30438497?file=59024339"
   }
 ];
 
@@ -56,7 +64,8 @@ const pdfLinks = [
   "https://drive.google.com/file/d/1fUiFWi10wJgIwjCqT0eSq6oVruIivnyS/view?usp=drivesdk",
   "https://drive.google.com/file/d/1KP5noNyxybRD3otmhZvNBgYJ-OAOOwfG/view?usp=drivesdk",
   "https://drive.google.com/file/d/1el29NzaaAESovQJFI4csDVvbsF-Lvvyj/view?usp=drivesdk",
-  "https://drive.google.com/file/d/1uHWSfG6K3nP5-jhLP4Q6xWEeEwDLCOd8/view?usp=drivesdk"
+  "https://drive.google.com/file/d/1uHWSfG6K3nP5-jhLP4Q6xWEeEwDLCOd8/view?usp=drivesdk",
+  "https://drive.google.com/file/d/1uACurRgosao34NKRqfdmnOB3Emco3s0x/view?usp=drivesdk"
 ];
 
 function App() {
