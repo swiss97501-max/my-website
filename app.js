@@ -65,7 +65,7 @@ const pdfLinks = [
   "https://drive.google.com/file/d/1KP5noNyxybRD3otmhZvNBgYJ-OAOOwfG/view?usp=drivesdk",
   "https://drive.google.com/file/d/1el29NzaaAESovQJFI4csDVvbsF-Lvvyj/view?usp=drivesdk",
   "https://drive.google.com/file/d/1uHWSfG6K3nP5-jhLP4Q6xWEeEwDLCOd8/view?usp=drivesdk",
-  "https://drive.google.com/file/d/1uACurRgosao34NKRqfdmnOB3Emco3s0x/view?usp=drivesdk"
+  "https://drive.google.com/file/d/10nIu-YMJWwYUWEu9VRxADjbZ3F1BHSoF/view?usp=drivesdk"
 ];
 
 function App() {
