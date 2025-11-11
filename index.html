@@ -1,177 +1,140 @@
 <!DOCTYPE html>
-<html lang="th">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Swiss IQ Tester</title>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
-<style>
-body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg,#f0f2f5,#d0e7ff);
-    display:flex;
-    justify-content:center;
-    align-items:flex-start;
-    min-height:100vh;
-    padding:20px;
-}
-.container{
-    background:white;
-    padding:20px 30px;
-    border-radius:15px;
-    width:95%;
-    max-width:650px;
-    box-shadow:0 10px 25px rgba(0,0,0,0.2);
-}
-h1,h2{text-align:center;color:#333;}
-input,textarea,select{width:100%;padding:8px;margin:5px 0 15px 0;border-radius:6px;border:1px solid #ccc;}
-button{padding:12px;width:100%;background-color:#4CAF50;color:white;font-weight:bold;border:none;border-radius:10px;cursor:pointer;font-size:16px;margin-bottom:15px;}
-button:hover{background-color:#45a049;}
-.question-box{margin-bottom:15px;}
-#progress{margin-bottom:15px;font-weight:bold;}
-</style>
-</head>
-<body>
-<div class="container">
-<h1>Swiss Russameekiattisak IQ Tester</h1>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>
+      Figshare Explorer - Swiss Russameekiattisak (สวิส รัศมีเกียรติศักดิ์)
+    </title>
 
-<div id="profile">
-<h2>กรอกข้อมูลผู้ใช้</h2>
-<label>ชื่อ: Swiss Russameekiattisak</label>
-<label>อายุ:
-<input type="number" id="age" min="1" max="140" value="25">
-</label>
-<label>ส่วนสูง (cm):
-<input type="number" id="height" min="30" max="250" value="170">
-</label>
-<label>น้ำหนัก (kg):
-<input type="number" id="weight" min="3" max="250" value="70">
-</label>
-<label>เพศ:
-<select id="gender">
-<option value="ชาย">ชาย</option>
-<option value="หญิง">หญิง</option>
-<option value="อื่น">อื่น</option>
-</select>
-</label>
-<button onclick="startTest()">เริ่มทดสอบ IQ</button>
-</div>
+    <!-- Tailwind -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <!-- React + ReactDOM -->
+    <script src="https://unpkg.com/react@18/umd/react.production.min.js"></script>
+    <script src="https://unpkg.com/react-dom@18/umd/react-dom.production.min.js"></script>
+    <!-- Babel -->
+    <script src="https://unpkg.com/babel-standalone@6/babel.min.js"></script>
+  </head>
 
-<div id="test" style="display:none;">
-<h2>คำถาม IQ</h2>
-<div id="progress">ตอบไป 0/20 ข้อ</div>
-<form id="questionForm"></form>
-<button onclick="submitTest()">ส่งคำตอบ</button>
-</div>
+  <body class="bg-gray-100 text-gray-900">
+    <div id="root"></div>
 
-<div id="result" style="display:none;">
-<h2>ผลการทดสอบ IQ</h2>
-<canvas id="iqChart" width="400" height="400"></canvas>
-<div id="summary"></div>
-</div>
+    <script type="text/babel">
+      const initialData = [
+        {
+          id: 1,
+          title: "Gravitational Acceleration Formula (Full Form) In 2025",
+          type: "Presentation",
+          posted_date: "2025-10-04",
+          description: "Presentation on gravitational acceleration formulas in 2025.",
+          public_url: "https://figshare.com/articles/presentation/Gravitational_Acceleration_Formula_Full_Form_In2025/30277669",
+          pdf_url: "https://drive.google.com/file/d/1FzwO6z56mpJH_zzT7tOT_jIAFMc7y0qw/view?usp=drivesdk"
+        },
+        {
+          id: 2,
+          title: "A Mathematical Framework for Comparing Binocular Vision and Wave Interference",
+          type: "Thesis",
+          posted_date: "2025-08-30",
+          description: "Thesis comparing binocular vision and wave interference mathematically.",
+          public_url: "https://figshare.com/articles/thesis/A_Mathematical_Framework_forComparing_Binocular_Vision_andWave_Interference/30016591",
+          pdf_url: "https://drive.google.com/file/d/1_d3gXOHXRMe-v2i1igExkARMyLhO9ji4/view?usp=drivesdk"
+        },
+        {
+          id: 3,
+          title: "Root-Power Arithmetic ⊛ Universe",
+          type: "Thesis",
+          posted_date: "2025-08-27",
+          description: "Thesis exploring root-power arithmetic in a universal context.",
+          public_url: "https://figshare.com/articles/thesis/Root-Power_Arithmetic_Universe/29992411",
+          pdf_url: "https://drive.google.com/file/d/1fUiFWi10wJgIwjCqT0eSq6oVruIivnyS/view?usp=drivesdk"
+        },
+        {
+          id: 4,
+          title: "A Swiss Conditional Framework for Legendre's Conjecture",
+          type: "Thesis",
+          posted_date: "2025-08-22",
+          description: "Thesis proposing a conditional framework for Legendre's conjecture.",
+          public_url: "https://figshare.com/articles/thesis/A_Swiss_Conditional_Framework_for_Legendre_s_Conjecture/29967043",
+          pdf_url: "https://drive.google.com/file/d/1KP5noNyxybRD3otmhZvNBgYJ-OAOOwfG/view?usp=drivesdkc"
+        },
+        {
+          id: 5,
+          title: "Twisting Equations From Discrete Sums to Continuous Truths",
+          type: "Thesis",
+          posted_date: "2025-08-16",
+          description: "Thesis on transforming discrete sums into continuous equations.",
+          public_url: "https://figshare.com/articles/thesis/TWISTING_EQUATIONS_FROM_DISCRETE_SUMS_TO_CONTINUOUSTRUTHS/29924387",
+          pdf_url: "https://drive.google.com/file/d/1el29NzaaAESovQJFI4csDVvbsF-Lvvyj/view?usp=drivesdk"
+        },
+        {
+          id: 6,
+          title: "Delta-Regularized Zeta Function and the Riemann Hypothesis",
+          type: "Thesis",
+          posted_date: "2025-08-05",
+          description: "Thesis on delta-regularized zeta function and its relation to the Riemann Hypothesis.",
+          public_url: "https://figshare.com/articles/thesis/SwissRh_DeltaZeta_RH_2025_pdf_pdf/29829023",
+          pdf_url: "https://drive.google.com/file/d/1uHWSfG6K3nP5-jhLP4Q6xWEeEwDLCOd8/view?usp=drivesdk"
+          pdf_url: "https://drive.google.com/file/d/1eMKa3N9Cxeg2KZ39CzB5ND2k-tUdS--C/view?usp=drivesdk"
+        },
+        {
+          id: 7,
+          title: "Twisting the P-Series with Logarithmic FunctionAn Indicator for Quantum System Deviation",
+          type: "Thesis",
+          posted_date: "2025-10-24",
+          description: "Thesis on Twisting the P-Series with Logarithmic FunctionAn Indicator for Quantum System Deviation.",
+          public_url: "https://figshare.com/articles/thesis/UntitledTwisting_the_P-Series_with_Logarithmic_FunctionAn_Indicator_for_Quantum_System_Deviation_Item/30438497?file=59024339",
+          pdf_url: "https://drive.google.com/file/d/10nIu-YMJWwYUWEu9VRxADjbZ3F1BHSoF/view?usp=drivesdk"
+        }
+      ];
 
-<script>
-// ----- คำถามเปิด 10 ข้อ -----
-const openQuestions = [
-"ถ้าเกิดไฟไหม้ในบ้าน คุณจะทำอย่างไรเพื่อความปลอดภัยของตัวเองและผู้อื่น?",
-"หากคุณพบเพื่อนที่เศร้า คุณจะช่วยให้เขารู้สึกดีขึ้นได้อย่างไร?",
-"ถ้ารถคุณเสียกลางทาง คุณจะจัดการอย่างไรเพื่อให้ถึงที่หมาย?",
-"หากคุณมีโอกาสลงทุน คุณจะตัดสินใจเลือกอะไรและทำไม?",
-"ถ้าเพื่อนลืมวันสำคัญของคุณ คุณจะทำอย่างไร?",
-"ถ้าเกิดปัญหาในทีมงาน คุณจะแก้ไขความขัดแย้งอย่างไร?",
-"คุณจะวางแผนการเรียนหรือทำงานอย่างไรเพื่อให้มีประสิทธิภาพสูงสุด?",
-"ถ้าต้องแก้ปัญหาความขัดแย้งระหว่างเพื่อน คุณจะทำอย่างไร?",
-"หากต้องตัดสินใจเรื่องสำคัญโดยมีเวลาจำกัด คุณจะทำอย่างไร?",
-"ถ้าพบว่าข้อมูลที่ใช้ในการตัดสินใจผิด คุณจะปรับแผนอย่างไร?"
-];
+      function App() {
+        return (
+          <div className="min-h-screen bg-gray-100 text-gray-900">
+            <header className="bg-gradient-to-r from-blue-600 to-indigo-600 p-4 shadow-md">
+              <div className="container mx-auto">
+                <h1 className="text-xl sm:text-2xl font-bold text-white">
+                  Figshare Explorer – Swiss Russameekiattisak (สวิส รัศมีเกียรติศักดิ์)
+                </h1>
+              </div>
+            </header>
 
-// ----- คำถามปิด 100 ข้อ -----
-const closedQuestions = [
-"1 2 4 8 ?","2 4 8 16 ?","3 6 12 24 ?","5 10 20 40 ?","1 4 9 16 ?",
-"2 5 10 17 ?","10 20 40 80 ?","1 3 6 10 ?","2 6 12 20 ?","1 3 5 7 ?",
-"23=5 45=9 78=?","123=77 243=157 435=?","12 24 36 ?","7 14 28 56 ?","9 18 36 72 ?",
-"4 8 16 32 ?","5 15 45 135 ?","6 12 18 24 ?","8 16 32 64 ?","11 22 44 88 ?",
-"2 5 11 23 ?","1 2 6 24 ?","3 9 27 81 ?","2 6 12 20 ?","5 7 10 14 ?",
-"1 1 2 3 5 ?","0 1 1 2 3 ?","2 4 8 16 ?","3 6 12 24 ?","1 2 4 8 ?",
-"13 26 52 104 ?","14 28 56 112 ?","15 30 60 120 ?","16 32 64 128 ?","17 34 68 136 ?",
-"18 36 72 144 ?","19 38 76 152 ?","20 40 80 160 ?","21 42 84 168 ?","22 44 88 176 ?"
-];
+            <main className="container mx-auto p-4">
+              <ul className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                {initialData.map((d) => (
+                  <li key={d.id} className="p-4 bg-white rounded-xl shadow hover:shadow-lg transition transform hover:-translate-y-1">
+                    <a
+                      href={d.public_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="text-blue-600 hover:underline font-semibold block mb-2"
+                    >
+                      {d.title}
+                    </a>
+                    <p className="text-sm opacity-90">{d.description}</p>
+                    <p className="text-xs text-gray-500 mt-2">
+                      📄 {d.type} • {d.posted_date}
+                    </p>
+                    <a
+                      href={d.pdf_url}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-2 inline-block px-3 py-1 bg-blue-600 text-white rounded hover:bg-blue-700 transition text-sm"
+                    >
+                      Download PDF
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </main>
 
-// ----- สุ่ม 10 คำถามปิด -----
-function getRandomClosedQuestions(n){
-let shuffled = closedQuestions.sort(()=>0.5-Math.random());
-return shuffled.slice(0,n);
-}
+            <footer className="text-center py-4 text-sm text-gray-500 border-t border-gray-300 mt-8">
+              © 2025 Swiss Russameekiattisak — Figshare Academic Viewer
+            </footer>
+          </div>
+        );
+      }
 
-const totalQuestions = openQuestions.length + 10;
-let answers = [];
-
-function startTest(){
-document.getElementById("profile").style.display="none";
-document.getElementById("test").style.display="block";
-const form = document.getElementById("questionForm");
-form.innerHTML="";
-const randomClosed = getRandomClosedQuestions(10);
-window.allQuestions = [...openQuestions, ...randomClosed];
-allQuestions.forEach((q,i)=>{
-const div = document.createElement("div");
-div.className="question-box";
-div.innerHTML=`<label>Q${i+1}: ${q}</label><textarea id="answer${i}" rows="2" oninput="updateProgress()"></textarea>`;
-form.appendChild(div);
-});
-updateProgress();
-}
-
-function updateProgress(){
-let answered = 0;
-for(let i=0;i<totalQuestions;i++){
-if(document.getElementById(`answer${i}`).value.trim()!="") answered++;
-}
-document.getElementById("progress").innerText=`ตอบไป ${answered}/${totalQuestions} ข้อ`;
-}
-
-function submitTest(){
-answers = [];
-for(let i=0;i<totalQuestions;i++){
-answers.push(document.getElementById(`answer${i}`).value.trim());
-}
-// ----- ประเมิน skill -----
-let skill = {
-Logic: Math.floor(Math.random()*100),
-Math: Math.floor(Math.random()*100),
-Verbal: Math.floor(Math.random()*100),
-Spatial: Math.floor(Math.random()*100),
-Memory: Math.floor(Math.random()*100),
-Creativity: Math.floor(Math.random()*100)
-};
-let iq = 50 + Math.round((skill.Logic+skill.Math+skill.Verbal+skill.Spatial+skill.Memory+skill.Creativity)/6*2);
-
-document.getElementById("test").style.display="none";
-document.getElementById("result").style.display="block";
-
-// ----- สร้าง radar chart -----
-const ctx = document.getElementById('iqChart').getContext('2d');
-new Chart(ctx,{
-type:'radar',
-data:{
-labels:["Logic","Math","Verbal","Spatial","Memory","Creativity"],
-datasets:[{
-label:`IQ ประมาณ: ${iq}`,
-data:[skill.Logic,skill.Math,skill.Verbal,skill.Spatial,skill.Memory,skill.Creativity],
-backgroundColor:'rgba(54,162,235,0.2)',
-borderColor:'rgba(54,162,235,1)',
-borderWidth:2,
-pointBackgroundColor:'rgba(54,162,235,1)'
-}]
-},
-options:{
-scales:{r:{min:0,max:100,ticks:{stepSize:20}}},
-plugins:{legend:{position:'top'}}
-}
-});
-
-document.getElementById("summary").innerHTML=`<p>ตอบคำถามทั้งหมด ${totalQuestions} ข้อแล้ว</p>`;
-}
-</script>
-</body>
+      ReactDOM.createRoot(document.getElementById("root")).render(<App />);
+    </script>
+  </body>
 </html>
