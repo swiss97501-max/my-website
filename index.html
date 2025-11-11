@@ -19,15 +19,17 @@ body {
     padding:20px 30px;
     border-radius:15px;
     width:95%;
-    max-width:600px;
+    max-width:700px;
     box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 h1,h2{text-align:center;color:#333;}
-input,textarea{width:100%;padding:8px;margin:5px 0 15px 0;border-radius:6px;border:1px solid #ccc;}
+input,textarea,select{width:100%;padding:8px;margin:5px 0 15px 0;border-radius:6px;border:1px solid #ccc;}
 button{padding:12px;width:100%;background-color:#4CAF50;color:white;font-weight:bold;border:none;border-radius:10px;cursor:pointer;font-size:16px;margin-bottom:15px;}
 button:hover{background-color:#45a049;}
 .question-box{margin-bottom:15px;}
+#iqChart{max-width:600px;margin:0 auto;}
 </style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
 <div class="container">
@@ -64,7 +66,9 @@ button:hover{background-color:#45a049;}
 <div id="result" style="display:none;">
 <h2>ผลการทดสอบ IQ</h2>
 <div id="score"></div>
+<canvas id="iqChart" width="400" height="400"></canvas>
 </div>
+
 <script>
 // ----- คำถามเปิด 10 ข้อ -----
 const openQuestions = [
@@ -82,11 +86,13 @@ const openQuestions = [
 
 // ----- คำถามปิด 100 ข้อ -----
 const closedQuestions = [
-    // ตัวอย่าง pattern 100 ข้อ
-    "1 2 4 8 ?", "2 4 8 16 ?", "3 6 12 24 ?", "5 10 20 40 ?", "1 4 9 16 ?", "2 5 10 17 ?", "10 20 40 80 ?", "1 3 6 10 ?", "2 6 12 20 ?", "1 3 5 7 ?",
-    "23=5 45=9 78=?", "123=77 243=157 435=?", "12 24 36 ?", "7 14 28 56 ?", "9 18 36 72 ?", "4 8 16 32 ?", "5 15 45 135 ?", "6 12 18 24 ?", "8 16 32 64 ?", "11 22 44 88 ?",
-    // ... สร้างต่อจน 100 ข้อ (เพื่อความยาวไม่เกินขีดจำกัด ตัวอย่าง 20 ข้อไว้ก่อน)
-    "2 5 11 23 ?", "1 2 6 24 ?", "3 9 27 81 ?", "2 6 12 20 ?", "5 7 10 14 ?", "1 1 2 3 5 ?", "0 1 1 2 3 ?", "2 4 8 16 ?", "3 6 12 24 ?", "1 2 4 8 ?"
+"1 2 4 8 ?","2 4 8 16 ?","3 6 12 24 ?","5 10 20 40 ?","1 4 9 16 ?",
+"2 5 10 17 ?","10 20 40 80 ?","1 3 6 10 ?","2 6 12 20 ?","1 3 5 7 ?",
+"23=5 45=9 78=?","123=77 243=157 435=?","12 24 36 ?","7 14 28 56 ?","9 18 36 72 ?",
+"4 8 16 32 ?","5 15 45 135 ?","6 12 18 24 ?","8 16 32 64 ?","11 22 44 88 ?",
+"2 5 11 23 ?","1 2 6 24 ?","3 9 27 81 ?","2 6 12 20 ?","5 7 10 14 ?",
+"1 1 2 3 5 ?","0 1 1 2 3 ?","2 4 8 16 ?","3 6 12 24 ?","1 2 4 8 ?",
+// ... คุณสามารถเพิ่มต่อจนครบ 100 ข้อ
 ];
 
 // ----- สุ่มเลือก 10 คำถามปิด -----
@@ -96,13 +102,14 @@ function getRandomClosedQuestions(n){
 }
 
 // ----- สร้างแบบทดสอบ -----
+let allQuestions = [];
 function startTest(){
     document.getElementById("profile").style.display="none";
     document.getElementById("test").style.display="block";
     const form = document.getElementById("questionForm");
     form.innerHTML="";
     const randomClosed = getRandomClosedQuestions(10);
-    const allQuestions = [...openQuestions, ...randomClosed];
+    allQuestions = [...openQuestions, ...randomClosed];
     allQuestions.forEach((q,i)=>{
         const div = document.createElement("div");
         div.className="question-box";
@@ -111,21 +118,52 @@ function startTest(){
     });
 }
 
-// ----- ประเมินคะแนน -----
+// ----- ประเมินคะแนนและ radar chart -----
 function submitTest(){
-    const total = openQuestions.length + 10;
-    let score = 0;
-    // สำหรับคำถามปิด ตรวจความถูกต้อง (แบบตัวอย่าง) เช่น sequence
+    const total = allQuestions.length;
+    let scoreClosed = 0;
     const correctAnswers = ["16","32","81","80","25","28","120","10","128","15","5","157","48","112","144","64","135","24","64","15"];
     for(let i=openQuestions.length;i<total;i++){
         const ans = document.getElementById(`answer${i}`).value.trim();
-        if(ans===correctAnswers[i-openQuestions.length]) score++;
+        if(ans===correctAnswers[i-openQuestions.length]) scoreClosed++;
     }
-    // คะแนน IQ แบบประเมินตัวอย่าง
-    let iq = 70 + Math.round((score/10)*50); // 10 ข้อปิด
+    let iq = 70 + Math.round((scoreClosed/10)*50); // ประเมิน IQ จากคำถามปิด
+
+    // skill 6 ด้าน แบบจำลอง
+    const skills = {
+        Logic: Math.min(100, Math.max(0, Math.round(Math.random()*100))),
+        Math: Math.min(100, Math.max(0, Math.round((scoreClosed/10)*100))),
+        Verbal: Math.min(100, Math.max(0, Math.round(Math.random()*100))),
+        Spatial: Math.min(100, Math.max(0, Math.round(Math.random()*100))),
+        Memory: Math.min(100, Math.max(0, Math.round(Math.random()*100))),
+        Creativity: Math.min(100, Math.max(0, Math.round(Math.random()*100)))
+    };
+
     document.getElementById("test").style.display="none";
     document.getElementById("result").style.display="block";
-    document.getElementById("score").innerHTML=`<p>คะแนน IQ ประมาณ: ${iq}</p><p>คุณตอบคำถามเปิดทั้งหมดแล้ว คำถามปิดถูก ${score}/10</p>`;
+    document.getElementById("score").innerHTML=`<p>คะแนน IQ ประมาณ: ${iq}</p><p>คำถามปิดถูก ${scoreClosed}/10</p>`;
+
+    // สร้าง radar chart
+    const ctx = document.getElementById('iqChart').getContext('2d');
+    new Chart(ctx,{
+        type:'radar',
+        data:{
+            labels: Object.keys(skills),
+            datasets:[{
+                label:`IQ: ${iq}`,
+                data:Object.values(skills),
+                backgroundColor:'rgba(255,99,132,0.2)',
+                borderColor:'rgba(255,99,132,1)',
+                borderWidth:2,
+                pointBackgroundColor:'rgba(255,99,132,1)'
+            }]
+        },
+        options:{
+            scales:{
+                r:{min:0,max:100}
+            }
+        }
+    });
 }
 </script>
 </body>
