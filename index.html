@@ -20,7 +20,7 @@ body {
     padding:20px 30px;
     border-radius:15px;
     width:95%;
-    max-width:600px;
+    max-width:650px;
     box-shadow:0 10px 25px rgba(0,0,0,0.2);
 }
 h1,h2{text-align:center;color:#333;}
@@ -92,7 +92,9 @@ const closedQuestions = [
 "23=5 45=9 78=?","123=77 243=157 435=?","12 24 36 ?","7 14 28 56 ?","9 18 36 72 ?",
 "4 8 16 32 ?","5 15 45 135 ?","6 12 18 24 ?","8 16 32 64 ?","11 22 44 88 ?",
 "2 5 11 23 ?","1 2 6 24 ?","3 9 27 81 ?","2 6 12 20 ?","5 7 10 14 ?",
-"1 1 2 3 5 ?","0 1 1 2 3 ?","2 4 8 16 ?","3 6 12 24 ?","1 2 4 8 ?"
+"1 1 2 3 5 ?","0 1 1 2 3 ?","2 4 8 16 ?","3 6 12 24 ?","1 2 4 8 ?",
+"13 26 52 104 ?","14 28 56 112 ?","15 30 60 120 ?","16 32 64 128 ?","17 34 68 136 ?",
+"18 36 72 144 ?","19 38 76 152 ?","20 40 80 160 ?","21 42 84 168 ?","22 44 88 176 ?"
 ];
 
 // ----- สุ่ม 10 คำถามปิด -----
@@ -101,7 +103,6 @@ let shuffled = closedQuestions.sort(()=>0.5-Math.random());
 return shuffled.slice(0,n);
 }
 
-let currentIndex = 0;
 const totalQuestions = openQuestions.length + 10;
 let answers = [];
 
@@ -134,7 +135,7 @@ answers = [];
 for(let i=0;i<totalQuestions;i++){
 answers.push(document.getElementById(`answer${i}`).value.trim());
 }
-// ----- ประเมินคะแนนตัวอย่าง -----
+// ----- ประเมิน skill -----
 let skill = {
 Logic: Math.floor(Math.random()*100),
 Math: Math.floor(Math.random()*100),
@@ -143,7 +144,7 @@ Spatial: Math.floor(Math.random()*100),
 Memory: Math.floor(Math.random()*100),
 Creativity: Math.floor(Math.random()*100)
 };
-let iq = 50 + Math.round((skill.Logic+skill.Math+skill.Verbal+skill.Spatial+skill.Memory+skill.Creativity)/6*2); // ตัวอย่าง IQ
+let iq = 50 + Math.round((skill.Logic+skill.Math+skill.Verbal+skill.Spatial+skill.Memory+skill.Creativity)/6*2);
 
 document.getElementById("test").style.display="none";
 document.getElementById("result").style.display="block";
