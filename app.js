@@ -41,7 +41,7 @@ const initialData = [
   },
   {
     id: 6,
-    title: "Delta-Regularized Zeta Function and the Riemann Hypothesis",
+    title: "A Study of the Modified Dirichlet Difference Function δ(s) and Its Analytical Behaviour Near the Critical Line",
     type: "Thesis",
     posted_date: "2025-08-05",
     description: "Thesis on delta-regularized zeta function and its relation to the Riemann Hypothesis.",
@@ -64,7 +64,7 @@ const pdfLinks = [
   "https://drive.google.com/file/d/1fUiFWi10wJgIwjCqT0eSq6oVruIivnyS/view?usp=drivesdk",
   "https://drive.google.com/file/d/1KP5noNyxybRD3otmhZvNBgYJ-OAOOwfG/view?usp=drivesdk",
   "https://drive.google.com/file/d/1el29NzaaAESovQJFI4csDVvbsF-Lvvyj/view?usp=drivesdk",
-  "https://drive.google.com/file/d/1eMKa3N9Cxeg2KZ39CzB5ND2k-tUdS--C/view?usp=drivesdk",
+  "https://drive.google.com/file/d/1GbFIYU18699cOltsGcY2poi4KjZdcecD/view?usp=drivesdk",
   "https://drive.google.com/file/d/10nIu-YMJWwYUWEu9VRxADjbZ3F1BHSoF/view?usp=drivesdk"
 ];
 
